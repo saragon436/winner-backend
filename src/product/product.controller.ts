@@ -51,4 +51,19 @@ export class ProductController {
         return of(res.sendFile(join(process.cwd(), 'uploads/blog-entry-images/' + imagename)));
     }
 
+    @Get("/family")
+    findAllFamily() {
+        return this.productService.findAllFamily();
+    }
+
+    @Get("/category")
+    findByFamily(@Query('family') family: string = null) {
+        return this.productService.findByFamily(family);
+    }
+
+    @Get("/findproduct")
+    findByCategory(@Query('family') family: string = null,@Query('category') category: string = null) {
+        return this.productService.findByCategory(family,category);
+    }
+
 }

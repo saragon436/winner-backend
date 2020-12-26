@@ -6,6 +6,12 @@ export class ProductStock extends BaseEntity {
     idProduct_stock: string;
 
     @Column()
+    familia: string;
+
+    @Column()
+    categoria: string;
+
+    @Column()
     idProduct: String;
 
     @Column()

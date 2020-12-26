@@ -30,9 +30,11 @@ export class ProductService {
                 let arrayRow = Array.from(row);
                 if (index > 0 && arrayRow[0] != null) {
                     const product_stock = new ProductStock();
-                    product_stock.idProduct = arrayRow[0];
-                    product_stock.description = arrayRow[1];
-                    product_stock.quantity = arrayRow[2];
+                    product_stock.familia = arrayRow[0];
+                    product_stock.categoria = arrayRow[1];
+                    product_stock.idProduct = arrayRow[2];
+                    product_stock.description = arrayRow[3];
+                    product_stock.quantity = arrayRow[4];
                     await product_stock.save();
                 }
             })
@@ -46,6 +48,39 @@ export class ProductService {
         try {
             let query = `CALL SP_GET_STOCK_BY_FILTERS(?,?)`;
             let data = await this.connection.query(query, [idProduct, description]);
+            return new ResponseGeneric(true, this.SUCCESS_NESSAGE, data[0]);
+        } catch (error) {
+            return new ResponseGeneric(true, this.ERROR_NESSAGE + ' : ' + error, null);
+        }
+
+    }
+
+    async findAllFamily(): Promise<ResponseGeneric> {
+        try {
+            let query = `CALL SP_GET_FAMILY_ALL()`;
+            let data = await this.connection.query(query, []);
+            return new ResponseGeneric(true, this.SUCCESS_NESSAGE, data[0]);
+        } catch (error) {
+            return new ResponseGeneric(true, this.ERROR_NESSAGE + ' : ' + error, null);
+        }
+
+    }
+
+    async findByFamily(family: string): Promise<ResponseGeneric> {
+        try {
+            let query = `CALL SP_GET_CATEGORY_FAMILY(?)`;
+            let data = await this.connection.query(query, [family]);
+            return new ResponseGeneric(true, this.SUCCESS_NESSAGE, data[0]);
+        } catch (error) {
+            return new ResponseGeneric(true, this.ERROR_NESSAGE + ' : ' + error, null);
+        }
+
+    }
+
+    async findByCategory(family:string,category: string): Promise<ResponseGeneric> {
+        try {
+            let query = `CALL SP_GET_PRODUCTO_CATEGORY(?,?)`;
+            let data = await this.connection.query(query, [family,category]);
             return new ResponseGeneric(true, this.SUCCESS_NESSAGE, data[0]);
         } catch (error) {
             return new ResponseGeneric(true, this.ERROR_NESSAGE + ' : ' + error, null);

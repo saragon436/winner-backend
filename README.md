@@ -73,3 +73,9 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
   Nest is [MIT licensed](LICENSE).
+
+
+## conection to bd
+
+para realizar la conexion con la bd , es necesario realizar la siguiente configuracion
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'

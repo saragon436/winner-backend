@@ -8,6 +8,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import path = require('path');
 import { v4 as uuidv4 } from 'uuid';
+import { query } from 'express';
 
 export const storage = {
     storage: diskStorage({
@@ -36,8 +37,8 @@ export class ProductController {
     }
 
     @Get("/stock")
-    findByIdAndDescription(@Query('idProduct') idProduct: string = null,@Query('description') description: string = null) {
-        return this.productService.findByIdAndDescription(idProduct,description);
+    findByIdAndDescription(@Query('idProduct') idProduct: string = null,@Query('description') description: string = null,@Query('codigo') codigo:string=null) {
+        return this.productService.findByIdAndDescription(idProduct,description,codigo);
     }
 
     @UseInterceptors(FileInterceptor('file', storage))
@@ -57,13 +58,13 @@ export class ProductController {
     }
 
     @Get("/category")
-    findByFamily(@Query('family') family: string = null) {
-        return this.productService.findByFamily(family);
+    findByFamily(@Query('family') family: string = null,@Query('codigo') codigo:string=null) {
+        return this.productService.findByFamily(family,codigo);
     }
 
     @Get("/findproduct")
-    findByCategory(@Query('family') family: string = null,@Query('category') category: string = null) {
-        return this.productService.findByCategory(family,category);
+    findByCategory(@Query('family') family: string = null,@Query('category') category: string = null,@Query('codigo') codigo:string=null) {
+        return this.productService.findByCategory(family,category,codigo);
     }
 
 }

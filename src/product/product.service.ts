@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as xlsx from 'node-xlsx';
 import { ProductStock } from 'src/entity/product-stock';
 import { EntityManager } from 'typeorm';
@@ -44,11 +44,15 @@ export class ProductService {
         }
     }
 
-    async findByIdAndDescription(idProduct: string, description: string): Promise<ResponseGeneric> {
+    async findByIdAndDescription(idProduct: string, description: string,codigo :string): Promise<ResponseGeneric> {
         try {
-            let query = `CALL SP_GET_STOCK_BY_FILTERS(?,?)`;
-            let data = await this.connection.query(query, [idProduct, description]);
-            return new ResponseGeneric(true, this.SUCCESS_NESSAGE, data[0]);
+            if(codigo=='2'){
+                let query = `CALL SP_GET_STOCK_BY_FILTERS(?,?)`;
+                let data = await this.connection.query(query, [idProduct, description]);
+                return new ResponseGeneric(true, this.SUCCESS_NESSAGE, data[0]);                
+            }else{
+                return new ResponseGeneric(true, this.ERROR_NESSAGE + ' : ' + 'no tiene acceso', null);
+            }            
         } catch (error) {
             return new ResponseGeneric(true, this.ERROR_NESSAGE + ' : ' + error, null);
         }
@@ -66,22 +70,30 @@ export class ProductService {
 
     }
 
-    async findByFamily(family: string): Promise<ResponseGeneric> {
+    async findByFamily(family: string,codigo :string): Promise<ResponseGeneric> {
         try {
+            if(codigo=='2'){
             let query = `CALL SP_GET_CATEGORY_FAMILY(?)`;
             let data = await this.connection.query(query, [family]);
             return new ResponseGeneric(true, this.SUCCESS_NESSAGE, data[0]);
+            }else{
+                return new ResponseGeneric(true, this.ERROR_NESSAGE + ' : ' + 'no cuenta con permisos', null);  
+            }
         } catch (error) {
             return new ResponseGeneric(true, this.ERROR_NESSAGE + ' : ' + error, null);
         }
 
     }
 
-    async findByCategory(family:string,category: string): Promise<ResponseGeneric> {
+    async findByCategory(family:string,category: string,codigo :string): Promise<ResponseGeneric> {
         try {
+            if(codigo=="2"){
             let query = `CALL SP_GET_PRODUCTO_CATEGORY(?,?)`;
             let data = await this.connection.query(query, [family,category]);
-            return new ResponseGeneric(true, this.SUCCESS_NESSAGE, data[0]);
+            return new ResponseGeneric(true, this.SUCCESS_NESSAGE + ' el codigo es' + codigo, data[0]);
+            }else{
+                return new ResponseGeneric(true, this.ERROR_NESSAGE + ' el codigo es' + codigo + ' : ' + 'no cuenta con permisos', null);
+            }
         } catch (error) {
             return new ResponseGeneric(true, this.ERROR_NESSAGE + ' : ' + error, null);
         }
